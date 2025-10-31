@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Knowledge Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-white p-4">
+    <div id="root"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const CheckCircle = () => (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        );
+
+        const XCircle = () => (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        );
+
+        const Award = () => (
+            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+        );
+
+        const Users = () => (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+        );
+
+        const BarChart = () => (
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+        );
+
+        const CybersecurityQuiz = () => {
+            const [screen, setScreen] = useState('welcome');
+            const [name, setName] = useState('');
+            const [currentQ, setCurrentQ] = useState(0);
+            const [answers, setAnswers] = useState([]);
+            const [participants, setParticipants] = useState([]);
+
+            const questions = [
+                {
+                    q: "What does CIA stand for in cybersecurity?",
+                    options: ["Central Intelligence Agency", "Confidentiality, Integrity, Availability", "Cyber Information Analysis", "Computer Internet Access"],
+                    answer: 1,
+                    justification: "CIA Triad represents the three core principles of information security: Confidentiality (protecting data from unauthorized access), Integrity (ensuring data accuracy), and Availability (ensuring authorized access to data)."
+                },
+                {
+                    q: "Which attack involves overwhelming a system with traffic?",
+                    options: ["Phishing", "SQL Injection", "DDoS", "Man-in-the-Middle"],
+                    answer: 2,
+                    justification: "DDoS (Distributed Denial of Service) attacks flood a system with massive amounts of traffic from multiple sources, making it unavailable to legitimate users."
+                },
+                {
+                    q: "What is the primary purpose of encryption?",
+                    options: ["Speed up data transfer", "Protect data confidentiality", "Compress data", "Backup data"],
+                    answer: 1,
+                    justification: "Encryption transforms readable data into an unreadable format to protect confidentiality, ensuring only authorized parties with the decryption key can access the original information."
+                },
+                {
+                    q: "Which protocol provides secure communication over a network?",
+                    options: ["HTTP", "FTP", "HTTPS", "SMTP"],
+                    answer: 2,
+                    justification: "HTTPS (HTTP Secure) uses SSL/TLS encryption to provide secure communication over a network, protecting data in transit from eavesdropping and tampering."
+                },
+                {
+                    q: "What is a firewall's main function?",
+                    options: ["Antivirus protection", "Data encryption", "Network traffic filtering", "Password management"],
+                    answer: 2,
+                    justification: "A firewall monitors and filters incoming and outgoing network traffic based on security rules, acting as a barrier between trusted internal networks and untrusted external networks."
+                },
+                {
+                    q: "What does two-factor authentication add to security?",
+                    options: ["A second password", "An additional verification method", "Antivirus software", "A firewall"],
+                    answer: 1,
+                    justification: "Two-factor authentication (2FA) adds a second verification method beyond passwords (something you know), such as a phone code (something you have) or biometric (something you are), significantly enhancing security."
+                },
+                {
+                    q: "Which attack tricks users into revealing sensitive information?",
+                    options: ["DDoS", "Phishing", "Brute Force", "SQL Injection"],
+                    answer: 1,
+                    justification: "Phishing is a social engineering attack where attackers disguise themselves as trustworthy entities to deceive users into revealing sensitive information like passwords or credit card numbers."
+                },
+                {
+                    q: "What is malware?",
+                    options: ["Hardware failure", "Malicious software", "Network protocol", "Security policy"],
+                    answer: 1,
+                    justification: "Malware (malicious software) is any software intentionally designed to cause damage to computers, servers, networks, or users. Examples include viruses, trojans, ransomware, and spyware."
+                },
+                {
+                    q: "What does VPN stand for?",
+                    options: ["Virtual Private Network", "Very Protected Network", "Verified Public Network", "Visual Protocol Navigation"],
+                    answer: 0,
+                    justification: "VPN (Virtual Private Network) creates an encrypted connection over a less secure network, providing privacy and security by routing traffic through a secure tunnel."
+                },
+                {
+                    q: "Which of these is the strongest password?",
+                    options: ["password123", "12345678", "Tr0ub4dor&3", "MyName2024"],
+                    answer: 2,
+                    justification: "Tr0ub4dor&3 is the strongest as it combines uppercase, lowercase, numbers, and special characters with sufficient length, making it resistant to brute force and dictionary attacks."
+                },
+                {
+                    q: "What is ransomware?",
+                    options: ["Free security software", "Malware that encrypts files for ransom", "Network monitoring tool", "Password manager"],
+                    answer: 1,
+                    justification: "Ransomware is malicious software that encrypts a victim's files and demands payment (ransom) to restore access, often causing significant financial and operational damage."
+                },
+                {
+                    q: "What does SSL/TLS provide?",
+                    options: ["Data compression", "Encrypted communication", "File storage", "Network speed"],
+                    answer: 1,
+                    justification: "SSL/TLS (Secure Sockets Layer/Transport Layer Security) protocols provide encrypted communication between clients and servers, ensuring data confidentiality and integrity during transmission."
+                },
+                {
+                    q: "What is social engineering in cybersecurity?",
+                    options: ["Building secure networks", "Manipulating people to divulge information", "Software engineering", "Network architecture"],
+                    answer: 1,
+                    justification: "Social engineering exploits human psychology rather than technical vulnerabilities, manipulating people into breaking security procedures or revealing confidential information."
+                },
+                {
+                    q: "What is a zero-day vulnerability?",
+                    options: ["A patched security flaw", "An unknown security flaw", "A one-day old virus", "A daily security update"],
+                    answer: 1,
+                    justification: "A zero-day vulnerability is a security flaw unknown to the software vendor and without an available patch, giving attackers an advantage as there's zero days of protection available."
+                },
+                {
+                    q: "What is the purpose of penetration testing?",
+                    options: ["Installing software", "Finding system vulnerabilities", "Creating backups", "Monitoring bandwidth"],
+                    answer: 1,
+                    justification: "Penetration testing (ethical hacking) simulates cyberattacks to identify and fix security vulnerabilities before malicious actors can exploit them."
+                },
+                {
+                    q: "What does IDS stand for?",
+                    options: ["Internet Data Service", "Intrusion Detection System", "Internal Database Security", "Integrated Defense Solution"],
+                    answer: 1,
+                    justification: "IDS (Intrusion Detection System) monitors network traffic for suspicious activity and potential threats, alerting administrators to possible security breaches."
+                },
+                {
+                    q: "What is SQL injection?",
+                    options: ["Database backup method", "Attack inserting malicious SQL code", "Programming language", "Network protocol"],
+                    answer: 1,
+                    justification: "SQL injection is an attack where malicious SQL code is inserted into input fields to manipulate databases, potentially exposing, modifying, or deleting sensitive data."
+                },
+                {
+                    q: "What is the principle of least privilege?",
+                    options: ["Everyone has admin rights", "Users get minimum necessary access", "No one has any access", "All users share passwords"],
+                    answer: 1,
+                    justification: "The principle of least privilege means users are given the minimum levels of access necessary to perform their jobs, reducing potential damage from accidents or attacks."
+                },
+                {
+                    q: "What is multi-factor authentication?",
+                    options: ["Multiple passwords", "Multiple verification factors", "Multiple user accounts", "Multiple firewalls"],
+                    answer: 1,
+                    justification: "Multi-factor authentication requires two or more independent verification factors from different categories (knowledge, possession, inherence) to verify identity, providing stronger security than single-factor."
+                },
+                {
+                    q: "What is a botnet?",
+                    options: ["Antivirus software", "Network of infected computers", "Security protocol", "Type of firewall"],
+                    answer: 1,
+                    justification: "A botnet is a network of compromised computers controlled by attackers without owners' knowledge, often used for DDoS attacks, spam distribution, or cryptocurrency mining."
+                }
+            ];
+
+            const passingScore = 14;
+
+            useEffect(() => {
+                loadParticipants();
+            }, []);
+
+            const loadParticipants = () => {
+                const stored = localStorage.getItem('cybersec_participants');
+                if (stored) {
+                    setParticipants(JSON.parse(stored));
+                }
+            };
+
+            const saveParticipant = (participantData) => {
+                const updated = [...participants, participantData];
+                setParticipants(updated);
+                localStorage.setItem('cybersec_participants', JSON.stringify(updated));
+            };
+
+            const startQuiz = () => {
+                if (name.trim()) {
+                    setScreen('quiz');
+                    setCurrentQ(0);
+                    setAnswers([]);
+                }
+            };
+
+            const selectAnswer = (idx) => {
+                const correct = idx === questions[currentQ].answer;
+                const newAnswers = [...answers, {
+                    question: questions[currentQ].q,
+                    userAnswer: idx,
+                    correctAnswer: questions[currentQ].answer,
+                    isCorrect: correct,
+                    justification: questions[currentQ].justification
+                }];
+                setAnswers(newAnswers);
+
+                if (currentQ < questions.length - 1) {
+                    setCurrentQ(currentQ + 1);
+                } else {
+                    const score = newAnswers.filter(a => a.isCorrect).length;
+                    const participantData = {
+                        name,
+                        score,
+                        percentage: (score / questions.length * 100).toFixed(1),
+                        passed: score >= passingScore,
+                        date: new Date().toLocaleString()
+                    };
+                    saveParticipant(participantData);
+                    setScreen('results');
+                }
+            };
+
+            const resetQuiz = () => {
+                setScreen('welcome');
+                setName('');
+                setCurrentQ(0);
+                setAnswers([]);
+                loadParticipants();
+            };
+
+            const score = answers.filter(a => a.isCorrect).length;
+            const passed = score >= passingScore;
+            const sorted = [...participants].sort((a, b) => b.score - a.score);
+            const passedList = sorted.filter(p => p.passed);
+            const failedList = sorted.filter(p => !p.passed);
+
+            return (
+                <div className="max-w-4xl mx-auto">
+                    {screen === 'welcome' && (
+                        <div className="text-center py-12">
+                            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+                                <div className="flex justify-center mb-6">
+                                    <div className="bg-blue-500 p-4 rounded-full">
+                                        <Award />
+                                    </div>
+                                </div>
+                                <h1 className="text-4xl font-bold mb-4">Cybersecurity Knowledge Assessment</h1>
+                                <div className="bg-blue-500/20 rounded-lg p-6 mb-8 border border-blue-500/30">
+                                    <p className="text-lg mb-2">📝 Total Questions: {questions.length}</p>
+                                    <p className="text-lg mb-2">✅ Passing Score: {passingScore}/{questions.length} (70%)</p>
+                                    <p className="text-sm text-blue-200 mt-4">Test your cybersecurity knowledge with 20 questions covering fundamental security concepts.</p>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Enter your name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && startQuiz()}
+                                    className="w-full max-w-md px-6 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/50 text-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                />
+                                <button
+                                    onClick={startQuiz}
+                                    disabled={!name.trim()}
+                                    className="px-8 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-semibold text-lg transition-all shadow-lg"
+                                >
+                                    Start Quiz
+                                </button>
+                                
+                                {participants.length > 0 && (
+                                    <div className="mt-8 text-left">
+                                        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                            <Users />
+                                            Previous Participants: {participants.length}
+                                        </h3>
+                                        <div className="bg-white/5 rounded-lg p-4 text-sm">
+                                            <p>✅ Passed: {passedList.length} | ❌ Failed: {failedList.length}</p>
+                                            <p>Pass Rate: {participants.length > 0 ? ((passedList.length / participants.length) * 100).toFixed(1) : 0}%</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {screen === 'quiz' && (
+                        <div className="py-8">
+                            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+                                <div className="mb-6">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-sm font-semibold text-blue-300">Question {currentQ + 1} of {questions.length}</span>
+                                        <span className="text-sm font-semibold text-blue-300">{name}</span>
+                                    </div>
+                                    <div className="w-full bg-white/20 rounded-full h-2">
+                                        <div 
+                                            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                                            style={{width: `${((currentQ + 1) / questions.length) * 100}%`}}
+                                        />
+                                    </div>
+                                </div>
+
+                                <h2 className="text-2xl font-bold mb-6">{questions[currentQ].q}</h2>
+
+                                <div className="space-y-3">
+                                    {questions[currentQ].options.map((opt, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => selectAnswer(idx)}
+                                            className="w-full text-left p-4 bg-white/5 hover:bg-white/15 border border-white/20 hover:border-blue-400 rounded-lg transition-all font-medium"
+                                        >
+                                            <span className="inline-block w-8 h-8 rounded-full bg-blue-500/30 text-center leading-8 mr-3">
+                                                {String.fromCharCode(65 + idx)}
+                                            </span>
+                                            {opt}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {screen === 'results' && (
+                        <div className="py-8">
+                            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-6">
+                                <div className="text-center mb-8">
+                                    <div className={`inline-block p-4 rounded-full mb-4 ${passed ? 'bg-green-500' : 'bg-red-500'}`}>
+                                        {passed ? <CheckCircle /> : <XCircle />}
+                                    </div>
+                                    <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
+                                    <p className="text-xl mb-4">{name}</p>
+                                    <div className={`text-5xl font-bold mb-2 ${passed ? 'text-green-400' : 'text-red-400'}`}>
+                                        {score}/{questions.length}
+                                    </div>
+                                    <p className="text-2xl mb-4">{(score / questions.length * 100).toFixed(1)}%</p>
+                                    <div className={`inline-block px-6 py-2 rounded-full font-bold text-lg ${passed ? 'bg-green-500' : 'bg-red-500'}`}>
+                                        {passed ? '✓ PASSED' : '✗ FAILED'}
+                                    </div>
+                                </div>
+
+                                <div className="border-t border-white/20 pt-6">
+                                    <h3 className="text-xl font-semibold mb-4">Detailed Review:</h3>
+                                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                                        {answers.map((ans, idx) => (
+                                            <div key={idx} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                                <div className="flex items-start gap-3">
+                                                    <span className={`flex-shrink-0 ${ans.isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+                                                        {ans.isCorrect ? <CheckCircle /> : <XCircle />}
+                                                    </span>
+                                                    <div className="flex-1">
+                                                        <p className="font-semibold mb-2">{idx + 1}. {ans.question}</p>
+                                                        <p className="text-sm text-blue-200 mb-1">
+                                                            Your answer: {String.fromCharCode(65 + ans.userAnswer)}
+                                                        </p>
+                                                        {!ans.isCorrect && (
+                                                            <p className="text-sm text-green-300 mb-2">
+                                                                Correct answer: {String.fromCharCode(65 + ans.correctAnswer)}
+                                                            </p>
+                                                        )}
+                                                        <p className="text-sm text-gray-300 italic">{ans.justification}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={resetQuiz}
+                                    className="w-full mt-6 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition-all"
+                                >
+                                    Take Another Quiz
+                                </button>
+                            </div>
+
+                            {participants.length > 0 && (
+                                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+                                    <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                                        <BarChart />
+                                        All Participants - Classification
+                                    </h3>
+
+                                    <div className="mb-6">
+                                        <h4 className="text-lg font-semibold text-green-400 mb-3">✅ Passed Participants:</h4>
+                                        {passedList.length > 0 ? (
+                                            <div className="space-y-2">
+                                                {passedList.map((p, idx) => (
+                                                    <div key={idx} className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 flex justify-between items-center">
+                                                        <span className="font-medium">{idx + 1}. {p.name}</span>
+                                                        <span className="text-green-300">{p.score}/{questions.length} ({p.percentage}%)</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-400">No participants passed yet.</p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-red-400 mb-3">❌ Failed Participants:</h4>
+                                        {failedList.length > 0 ? (
+                                            <div className="space-y-2">
+                                                {failedList.map((p, idx) => (
+                                                    <div key={idx} className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex justify-between items-center">
+                                                        <span className="font-medium">{idx + 1}. {p.name}</span>
+                                                        <span className="text-red-300">{p.score}/{questions.length} ({p.percentage}%)</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-400">No participants failed.</p>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-6 pt-6 border-t border-white/20 grid grid-cols-3 gap-4 text-center">
+                                        <div>
+                                            <p className="text-2xl font-bold text-blue-400">{participants.length}</p>
+                                            <p className="text-sm text-gray-300">Total</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-2xl font-bold text-green-400">{passedList.length}</p>
+                                            <p className="text-sm text-gray-300">Passed</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-2xl font-bold text-red-400">{failedList.length}</p>
+                                            <p className="text-sm text-gray-300">Failed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<CybersecurityQuiz />, document.getElementById('root'));
+    </script>
+</body>
